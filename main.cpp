@@ -7,11 +7,12 @@
 #include <sstream>
 #include "node.h"
 
-#define NUM_LENGTH 50
-
 using namespace std;
 
-void import(string* arr, int size) {
+// imports strings from a file and loads them into an array of numbers stored
+// as strings
+void import(string* nums, int size) {
+   // create file object
    ifstream file;
    file.open("nums.txt");
 
@@ -19,17 +20,19 @@ void import(string* arr, int size) {
      cout << "nums.txt could not be opened." << endl;
    }
 
+   // get each line from the file, and reverse it and store in the array
    for (int i = 0; i < size; i++) {
       string tempS = "";
       getline(file, tempS);
       reverse(tempS.begin(), tempS.end());
-      arr[i] = tempS;
+      nums[i] = tempS;
    }
 
    file.close();
 }
 
-void addNode(Node*& head, string num) {
+// converts a string to integer values and adds it to a linked list
+void addToList(Node*& head, string num) {
    int remainder = 0;
    Node* temp = head;
 
@@ -61,18 +64,51 @@ void addNode(Node*& head, string num) {
    }
 
    while (remainder != 0) {
+      // If the last node has a null pointer, add another tail to the list
       if (temp->next == NULL) {
-         add_tail(head, (remainder % 10));
-         remainder /= 10;
+         // the value should be the remainder % 10, because you are done
+         // summing numbers
+         addTail(head, (remainder % 10));
+         remainder /= 10; // integer division of remainder
          temp = temp->next;
       } else {
-         int nodeData = temp->data;
-         remainder += nodeData;
-         temp->data = remainder % 10;
-         remainder /= 10;
-         temp = temp->next;
+         temp = temp->next; // get the next node
+         int nodeData = temp->data; // get the node data, as above
+         remainder += nodeData; // add it to the remainder, as above
+         temp->data = remainder % 10; // do modulus, as above
+         remainder /= 10; // integer division, as above
       }
    }
+}
+
+// prints the first 10 digit of the linked list, and also prints the entire
+// list
+void printList(Node* head) {
+   Node* temp = head; // create a temp pointer to the head (to be iterated over)
+
+   // create a stringstream to stream the values from the Nodes to
+   stringstream ss;
+
+   // stream each of the node data to the streamstring
+   while (temp) {
+      ss << temp->data;
+      temp = temp->next;
+   }
+
+   // convert the ss to a string and then reverse it so it'll display correctly
+   string ans = ss.str();
+   reverse(ans.begin(), ans.end());
+
+   // print per homework requirements
+   cout << "First 10 Digits of Final Summation: ";
+
+   for (int i = 0; i < 10; i++) {
+      cout << ans[i];
+   }
+
+   cout << endl;
+
+   cout << "Final Summation: " << ans << endl;
 }
 
 int main() {
@@ -82,35 +118,21 @@ int main() {
    // import all of the numbers as strings (backwards)
    import(nums, size);
 
-   for (int i = 0; i < size; i++) {
-      cout << i << ": " << nums[i] << endl;
-   }
-
-
    // Create a new head with (50) values
    Node* head = NULL;
 
    // Initialize all values of the nodes to 0
    for (int i = 1; i <= 50; i++) {
-      add_tail(head, 0);
+      addTail(head, 0);
    }
 
    // Add each number in the array
    for (int i = 0; i < 100; i++) {
-      addNode(head, nums[i]);
+      addToList(head, nums[i]);
    }
 
-
-   Node* temp = head;
-
-   stringstream ss;
-
-   while (temp) {
-      ss << temp->data;
-      temp = temp->next;
-   }
-
-   cout << endl;
+   // print the required answers
+   printList(head);
 
    return 0;
 }

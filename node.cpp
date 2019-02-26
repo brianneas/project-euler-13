@@ -1,10 +1,14 @@
+// Name: Brian Neas
+// WSU ID: C282H554
+// Assignment: 3
+
 #include "node.h"
 #include <iostream>
 
-void add_tail(Node*& head, int num) {
+void addTail(Node*& head, int num) {
    // When the linked list is empty
    if (head == NULL) {
-      head = new Node(num);
+      head = new Node(num); // creates the first node
    } else {
       Node* temp = head;
 
@@ -14,11 +18,11 @@ void add_tail(Node*& head, int num) {
          temp = temp->next;
       }
 
-      temp->next = new Node(num);
+      temp->next = new Node(num); // add the node
    }
 }
 
-void add_head(Node*& head, int num) {
+void addHead(Node*& head, int num) {
    // make a copy of head
    Node* temp = head;
 
@@ -34,6 +38,7 @@ void del(Node*& head, int target) {
       return; // when the linked list is empty
    }
 
+   // create two pointers to keep track of the previous and current nodes
    Node* prev = NULL;
    Node* curr = head;
 
@@ -44,6 +49,7 @@ void del(Node*& head, int target) {
       curr = curr->next;
    }
 
+   // if curr == NULL, then it was not found
    if (curr == NULL) {
       return;
    }
